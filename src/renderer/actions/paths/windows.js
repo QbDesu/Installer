@@ -37,8 +37,8 @@ export const getDiscordPath = function(releaseChannel) {
     const releaseChannelFolder = releaseChannel.replace(" ", "");
 
     const basedirs = [
-        path.join(process.env.LOCALAPPDATA, releaseChannelFolder),
-        path.join(process.env.PROGRAMDATA, process.env.USERNAME, releaseChannelFolder)
+        path.join(process.env.PROGRAMDATA, process.env.USERNAME, releaseChannelFolder),
+        path.join(process.env.LOCALAPPDATA, releaseChannelFolder)
     ].filter(dir => fs.existsSync(dir));
     if (!basedirs.length) return "";
 
