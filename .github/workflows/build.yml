@@ -1,0 +1,42 @@
+name: BetterDiscord Installer
+
+# Controls when the action will run.
+on:
+  push:
+    branches:
+      - master
+      - combined2
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mac:
+    name: build and publish
+    runs-on: macos-latest
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump package version') }}
+
+    steps:
+      - name: clean working directory
+        run: rm -rf /home/runner/work/${{ github.repository }}
+
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - name: install dependencies
+        run: npm install
+
+      - name: build core
+        run: npm run compile
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: BetterDiscord-Mac.zip
+          path: ./dist/BetterDiscord-Mac.zip
